@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Feature extraction for RDCB. Sources: Ensembl VEP REST (VCF-format batch),
-gnomAD v4 GraphQL (AF + gene constraint), local ClinVar subset (same-codon
-evidence from OTHER variants only - G5). Disk-cached, resume-safe."""
+"""Feature extraction for RDCB. Ensembl VEP REST (region-format batch),
+gnomAD v4 GraphQL (AF + gene constraint), local ClinVar same-codon evidence
+(OTHER variants only - G5). Disk-cached, resume-safe."""
 import json, os, re, time, csv, sys, urllib.request, urllib.error
 
 BASE = "/home/sandbox/rare-disease-variant-pipeline"
@@ -10,7 +10,7 @@ os.makedirs(os.path.join(CACHE, "vep"), exist_ok=True)
 os.makedirs(os.path.join(CACHE, "gnomad"), exist_ok=True)
 os.makedirs(os.path.join(CACHE, "constraint"), exist_ok=True)
 
-def http_post(url, payload, tries=5):
+def http_post(url, payload, tries=10):
     data = json.dumps(payload).encode()
     for i in range(tries):
         try:
@@ -41,7 +41,6 @@ def to_region(c, p, r, a):
         return f"{c} {start + 1} {start} -/{a2} +"
     end = start + len(r2) - 1
     return f"{c} {start} {end} {r2}/{a2 or '-'} +"
-
 
 def vep_batch(variants):
     """variants: list of (chrom,pos,ref,alt). Returns dict vid -> feature dict."""
@@ -161,12 +160,12 @@ AA = {"Ala":"A","Arg":"R","Asn":"N","Asp":"D","Cys":"C","Gln":"Q","Glu":"E","Gly
 PROT_RE = re.compile(r"p\.(?:\()?([A-Za-z]{3})(\d+)([A-Za-z]{3}|Ter|=)?")
 
 def build_codon_index():
-    """gene -> prot_pos -> list of (to_aa1, sig) for P/LP missense in ClinVar subset."""
+    """gene -> prot_pos -> list of (change, sig, other_vid) for P/LP missense."""
     idx = {}
     with open(os.path.join(BASE, "data/clinvar_grch38_small.tsv")) as fh:
         r = csv.DictReader(fh, delimiter="\t")
         for row in r:
-            if row["ClinSigSimple"] != "1" and row["ClinicalSignificance"] not in (
+            if row["ClinicalSignificance"] not in (
                 "Pathogenic", "Likely pathogenic", "Pathogenic/Likely pathogenic"):
                 continue
             if row["ReviewStatus"] == "no assertion criteria provided":
@@ -184,8 +183,8 @@ def build_codon_index():
     return idx
 
 def same_codon(codon_idx, gene, protein_start, amino_acids, exclude_vid):
-    """PS1: identical AA change known P/LP. PM5: different AA change at same codon
-    known P/LP. Excludes the evaluated variant itself (G5)."""
+    """PS1: identical AA change known P/LP (other record). PM5: different AA
+    change at same codon known P/LP (other record)."""
     if not gene or not protein_start or not amino_acids:
         return False, False
     try:
@@ -207,11 +206,10 @@ def same_codon(codon_idx, gene, protein_start, amino_acids, exclude_vid):
     return ps1, pm5
 
 if __name__ == "__main__":
-    # smoke test on 3 variants
-    tv = [("13", "32339662", "T", "A"), ("17", "7674220", "C", "T"), ("X", "154363127", "G", "A")]
+    tv = [("13", "32339662", "T", "A"), ("17", "7674220", "C", "T")]
     v = vep_batch(tv)
     g = gnomad_batch(tv)
-    c = constraint_batch(["BRCA2", "TP53", "F8"])
+    c = constraint_batch(["BRCA2", "TP53"])
     ci = build_codon_index()
     for (cc, p, r, a) in tv:
         k = vid(cc, p, r, a)

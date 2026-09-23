@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""Parse phenopacket-store into a case index (data manifest artifact).
-Extracts per-phenopacket: ids, disease, observed HPO terms, causal variant
-(hg38 VCF record), allelic state, ACMG class. No outcome scoring here."""
+"""Parse phenopacket-store into a case index (data manifest artifact)."""
 import json, os, sys, csv
 
 ROOT = sys.argv[1]

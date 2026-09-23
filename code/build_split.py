@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""Build variant-level tune/held-out split from ClinVar GRCh38 small-variant subset.
-G5: split by variant (md5 of VariationID), deterministic. No ClinVar label leaks
-into features downstream; labels used only as answer key."""
+"""Build variant-level tune/held-out split from ClinVar GRCh38 small-variant subset."""
 import csv, hashlib, random, collections
 
 CLINVAR = "/home/sandbox/rare-disease-variant-pipeline/data/clinvar_grch38_small.tsv"

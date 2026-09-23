@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Build benchmark cases (G3). Real arm: phenopacket-store published cases.
 Sim arm: ClinVar 2-star+ P/LP variants (disjoint from the variant-level split,
-G5) spiked into GIAB HG002 background. Panel genes from case HPO terms only
-(no leakage of the causal gene beyond what HPO implies). Background: HG002
-NIST v4.2.1 PASS variants in panel-gene regions via remote tabix."""
-import csv, json, os, random, sys, collections
+G5) spiked into GIAB HG002 background. Panel genes from case HPO terms only.
+Background: HG002 NIST v4.2.1 PASS variants via remote tabix."""
+import csv, json, os, random, sys, collections, time
 import pysam
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from features import http_post
@@ -17,7 +16,7 @@ MAX_PANEL = 40
 MAX_BG = 150
 
 INH_DOM, INH_REC = "HP:0000006", "HP:0000007"
-SKIP_HPO = {INH_DOM, INH_REC, "HP:0000005"}  # inheritance terms are not phenotypes
+SKIP_HPO = {INH_DOM, INH_REC, "HP:0000005"}
 
 def load_maps():
     term2genes = collections.defaultdict(set)
@@ -52,7 +51,7 @@ def gene_coords(genes):
             d = res.get("data", {}).get(f"g{j}")
             cache[g] = {"chrom": (d.get("chrom") or "").replace("chr", ""),
                         "start": d.get("start"), "stop": d.get("stop")} if d else None
-        import time; time.sleep(0.5)
+        time.sleep(0.5)
     json.dump(cache, open(COORD_CACHE, "w"))
     return cache
 
@@ -98,8 +97,8 @@ def make_panel(case_hpos, term2genes):
 
 def build_real(n_target=200):
     term2genes, dis2hpo, dis2inh = load_maps()
-    idx = list(csv.DictReader(open(os.path.join(DATA,
-        "../repo/data/phenopacket_case_index.tsv")), delimiter="\t"))
+    idx = list(csv.DictReader(open(os.path.join(BASE,
+        "repo/data/phenopacket_case_index.tsv")), delimiter="\t"))
     idx = [r for r in idx if r["evaluable"] == "1"]
     by_case = collections.defaultdict(list)
     for r in idx:
@@ -119,7 +118,7 @@ def build_real(n_target=200):
         per_gene[gene0] += 1
         cases.append({"case_id": variants[0]["phenopacket_id"], "arm": "real",
                       "hpo": hpos, "panel": panel,
-                      "causal": [{"gene": v["gene"], "chrom": v["chrom"],
+                      "causal": [{"gene": v["cohort"], "chrom": v["chrom"],
                                   "pos": int(v["pos"]), "ref": v["ref"],
                                   "alt": v["alt"], "zygosity": v["allelic_state"],
                                   "hgvs_c": v["hgvs_c"]} for v in variants],
