@@ -32,3 +32,6 @@
 
 ## 2026-09-23 19:44 IST
 - annotate: gnomad 16,622/27,428 (~10.8k left, steady ~450 variants/105s, 2-6 skips/call retried next pass). Est. 2 more wake cycles to drain, then finish stage (classify/rank/report + g3g4) and M4.
+
+## 2026-09-23 20:15 IST
+- annotate: gnomad 22,622/27,428 (~4.8k left). Next wake should drain gnomad, then run finish stage (classify/rank/report + g3g4) and report M4 with G3/G4 numbers.
