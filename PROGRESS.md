@@ -14,3 +14,8 @@
 ## 2026-09-23 17:39 IST
 - hg002 prefetch IN PROGRESS: 1223/2648 genes cached with real tabix fetches.
 - BUG FOUND+FIXED: a dropped remote tabix connection made the old except-pass path write 1520 empty cache files in 11s (false done). Deleted all dead-pass files; prefetch now retries 3x with a fresh TabixFile and leaves failures UNCACHED. Data-integrity note: dead-pass empties never reached any case or result.
+
+## 2026-09-23 17:52 IST
+- hg002 stage COMPLETE: 2648/2648 panel genes cached. Downloaded GIAB HG002 v4.2.1 VCF+tbi locally (156MB) after remote-tabix throttling; local fetch ~1ms/gene.
+- Two integrity bugs fixed: (1) dead-connection pass wrote 1520 false-empty caches - purged, retry+fresh-handle patch; (2) chrX fetches always raised (GIAB v4.2.1 GRCh38 is autosomes 1-22 only, verified dir listing) - chrX now resolves to documented definitive empty, no retry. Empty caches: 148 chrX + 123 autosomal no-benchmark-call genes + 1 unresolved symbol. Limitation recorded for paper: no chrX HG002 background.
+- Next: annotate stage (VEP+gnomAD for unique case candidates) - the long pole.

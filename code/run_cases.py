@@ -21,6 +21,9 @@ def log(m):
 
 # ---------- per-gene HG002 background cache ----------
 GIAB_URL = "https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz"
+import os as _os
+_LOCAL = _os.path.join(DATA, "cache/HG002.vcf.gz")
+GIAB_SRC = _LOCAL if _os.path.exists(_LOCAL) else GIAB_URL
 
 def prefetch_hg002(cases, coords):
     d = os.path.join(DATA, "cache/hg002")
@@ -38,12 +41,15 @@ def prefetch_hg002(cases, coords):
         if not c or not c.get("start"):
             json.dump([], open(fp, "w")); continue
         if tb is None:
-            tb = pysam.TabixFile("https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz")
+            tb = pysam.TabixFile(GIAB_SRC)
+        if ("chr" + c["chrom"]) not in tb.contigs:
+            # definitive: GIAB v4.2.1 GRCh38 benchmark covers autosomes 1-22 only (no chrX)
+            json.dump([], open(fp, "w")); continue
         out = None
         for attempt in range(3):
             try:
                 if attempt:
-                    tb = pysam.TabixFile(GIAB_URL)
+                    tb = pysam.TabixFile(GIAB_SRC)
                 cur = []
                 for row in tb.fetch("chr" + c["chrom"], int(c["start"]), int(c["stop"])):
                     f = row.split("\t")

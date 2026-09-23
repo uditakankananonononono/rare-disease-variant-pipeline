@@ -11,6 +11,10 @@ from features import http_post
 BASE = "/home/sandbox/rare-disease-variant-pipeline"
 DATA = os.path.join(BASE, "data")
 GIAB = "https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz"
+import os as _os2
+_lp = _os2.path.join(DATA, "cache/HG002.vcf.gz")
+if _os2.path.exists(_lp):
+    GIAB = _lp
 COORD_CACHE = os.path.join(DATA, "cache/gene_coords.json")
 MAX_PANEL = 40
 MAX_BG = 150
