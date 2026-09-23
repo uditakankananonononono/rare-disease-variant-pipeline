@@ -46,3 +46,6 @@
 - G1b (positive control): PASS - sim full top-5 0.9796 >= 0.90.
 - G4: trace completeness 400/400 (6 strength-suffixed codes were parser artifacts, each code+datum present); calibration top-1: high 1/1, moderate-high 77/77, uncertain 272/322=0.845; false reassurance 0/400 (rule-of-three upper 0.75%); causal class dist P1/LP77/VUS322/LB0/B0.
 - Diagnosis: 12 lost vs 2 gained at top-5. Phenotype score boosts the true causal at rank 1 but injects pheno-matched VUS noise at ranks 2-5; causal variants in HPO-unmapped genes get pheno=0 and sink.
+
+## 2026-09-23 20:58 IST
+- Paper draft committed: paper/RDCB_paper.md (~2,400 words). Science-fair arc: problem -> multi-source byte-locked data -> locked-gate statistics -> results -> tool. Both negatives (G2 LOEUF, G3 top-5) preserved as findings; contribution = benchmarked interpretable case report + quantified top-1/top-5 phenotype tradeoff. Milestone 4 (results + paper draft) complete.
