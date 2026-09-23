@@ -19,3 +19,7 @@
 - hg002 stage COMPLETE: 2648/2648 panel genes cached. Downloaded GIAB HG002 v4.2.1 VCF+tbi locally (156MB) after remote-tabix throttling; local fetch ~1ms/gene.
 - Two integrity bugs fixed: (1) dead-connection pass wrote 1520 false-empty caches - purged, retry+fresh-handle patch; (2) chrX fetches always raised (GIAB v4.2.1 GRCh38 is autosomes 1-22 only, verified dir listing) - chrX now resolves to documented definitive empty, no retry. Empty caches: 148 chrX + 123 autosomal no-benchmark-call genes + 1 unresolved symbol. Limitation recorded for paper: no chrX HG002 background.
 - Next: annotate stage (VEP+gnomAD for unique case candidates) - the long pole.
+
+## 2026-09-23 18:08 IST
+- annotate stage IN PROGRESS: vep cache 14902 (6002 variant-level + case candidates), gnomad 6002 pending. 21440 unique case candidates total (~61/case x 400 cases).
+- Throughput fix: VEP now 6-threaded x 100/batch (5.7x: ~1500 variants/105s), gnomAD 3-threaded x 20/batch; failed batches skip uncached for resume (no fabricated annotations).

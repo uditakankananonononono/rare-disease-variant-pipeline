@@ -54,10 +54,17 @@ def vep_batch(variants):
             out[v] = json.load(open(fp))
         else:
             todo.append((c, p, r, a))
-    for i in range(0, len(todo), 50):
-        chunk = todo[i:i + 50]
+    from concurrent.futures import ThreadPoolExecutor
+    chunks = [todo[i:i + 100] for i in range(0, len(todo), 100)]
+    def _do_chunk(chunk):
         lines = [to_region(c, int(p), r, a) for c, p, r, a in chunk]
-        res = http_post("https://rest.ensembl.org/vep/human/region", {"variants": lines})
+        try:
+            res = http_post("https://rest.ensembl.org/vep/human/region", {"variants": lines})
+        except Exception as e:
+            print(f"vep batch skipped ({e}); left uncached for retry", flush=True)
+            return
+        _store_chunk(chunk, res)
+    def _store_chunk(chunk, res):
         region2vid = {to_region(c, int(p), r, a): vid(c, p, r, a) for c, p, r, a in chunk}
         by_input = {}
         for entry in res:
@@ -91,7 +98,12 @@ def vep_batch(variants):
                                     "hgvsp": "", "impact": "", "transcript": ""})
             json.dump(feat, open(os.path.join(CACHE, "vep", v + ".json"), "w"))
             out[v] = feat
-        time.sleep(0.34)
+    with ThreadPoolExecutor(max_workers=6) as ex:
+        list(ex.map(_do_chunk, chunks))
+    if False:
+        chunk = todo[0:0]
+        lines = [to_region(c, int(p), r, a) for c, p, r, a in chunk]
+        res = http_post("https://rest.ensembl.org/vep/human/region", {"variants": lines})
     return out
 
 # ---------------- gnomAD AF ----------------
@@ -105,8 +117,9 @@ def gnomad_batch(variants):
             out[v] = json.load(open(fp))
         else:
             todo.append(v)
-    for i in range(0, len(todo), 20):
-        chunk = todo[i:i + 20]
+    from concurrent.futures import ThreadPoolExecutor
+    chunks = [todo[i:i + 20] for i in range(0, len(todo), 20)]
+    def _do_chunk(chunk):
         q = "query { " + " ".join(
             f'v{j}: variant(variantId: "{v}", dataset: gnomad_r4) '
             "{ variant_id genome { af ac an } exome { af ac an } }"
@@ -114,8 +127,8 @@ def gnomad_batch(variants):
         try:
             res = http_post("https://gnomad.broadinstitute.org/api", {"query": q})
         except Exception as e:
-            print(f"gnomad batch skipped ({e}); left uncached for retry")
-            continue
+            print(f"gnomad batch skipped ({e}); left uncached for retry", flush=True)
+            return
         data = res.get("data", {})
         for j, v in enumerate(chunk):
             d = data.get(f"v{j}")
@@ -130,7 +143,8 @@ def gnomad_batch(variants):
                 feat = {"af": af, "ac": ac, "an": an, "found": True}
             json.dump(feat, open(os.path.join(CACHE, "gnomad", v + ".json"), "w"))
             out[v] = feat
-        time.sleep(0.5)
+    with ThreadPoolExecutor(max_workers=3) as ex:
+        list(ex.map(_do_chunk, chunks))
     return out
 
 # ---------------- gene constraint ----------------
