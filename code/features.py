@@ -10,13 +10,13 @@ os.makedirs(os.path.join(CACHE, "vep"), exist_ok=True)
 os.makedirs(os.path.join(CACHE, "gnomad"), exist_ok=True)
 os.makedirs(os.path.join(CACHE, "constraint"), exist_ok=True)
 
-def http_post(url, payload, tries=10):
+def http_post(url, payload, tries=4, timeout=45):
     data = json.dumps(payload).encode()
     for i in range(tries):
         try:
             req = urllib.request.Request(url, data=data,
                 headers={"Content-Type": "application/json", "Accept": "application/json"})
-            with urllib.request.urlopen(req, timeout=240) as r:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as e:
             if e.code == 400:
