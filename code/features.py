@@ -55,7 +55,7 @@ def vep_batch(variants):
         else:
             todo.append((c, p, r, a))
     from concurrent.futures import ThreadPoolExecutor
-    chunks = [todo[i:i + 100] for i in range(0, len(todo), 100)]
+    chunks = [todo[i:i + 50] for i in range(0, len(todo), 50)]
     def _do_chunk(chunk):
         lines = [to_region(c, int(p), r, a) for c, p, r, a in chunk]
         try:
@@ -98,7 +98,7 @@ def vep_batch(variants):
                                     "hgvsp": "", "impact": "", "transcript": ""})
             json.dump(feat, open(os.path.join(CACHE, "vep", v + ".json"), "w"))
             out[v] = feat
-    with ThreadPoolExecutor(max_workers=6) as ex:
+    with ThreadPoolExecutor(max_workers=4) as ex:
         list(ex.map(_do_chunk, chunks))
     if False:
         chunk = todo[0:0]

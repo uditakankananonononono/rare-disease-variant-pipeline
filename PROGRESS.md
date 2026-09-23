@@ -23,3 +23,6 @@
 ## 2026-09-23 18:08 IST
 - annotate stage IN PROGRESS: vep cache 14902 (6002 variant-level + case candidates), gnomad 6002 pending. 21440 unique case candidates total (~61/case x 400 cases).
 - Throughput fix: VEP now 6-threaded x 100/batch (5.7x: ~1500 variants/105s), gnomAD 3-threaded x 20/batch; failed batches skip uncached for resume (no fabricated annotations).
+
+## 2026-09-23 18:42 IST
+- annotate stage: vep cache 24652 (~2.8k case candidates remaining), gnomad 6002 (case pass starts when vep drains). Ensembl transient throttle resolved by dropping to 4x50 threads; 0-skip steady ~800/105s.
