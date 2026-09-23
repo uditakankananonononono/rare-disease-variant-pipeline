@@ -20,6 +20,8 @@ def log(m):
         fh.write(time.strftime("%H:%M:%S ") + m + "\n")
 
 # ---------- per-gene HG002 background cache ----------
+GIAB_URL = "https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz"
+
 def prefetch_hg002(cases, coords):
     d = os.path.join(DATA, "cache/hg002")
     os.makedirs(d, exist_ok=True)
@@ -37,20 +39,28 @@ def prefetch_hg002(cases, coords):
             json.dump([], open(fp, "w")); continue
         if tb is None:
             tb = pysam.TabixFile("https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz")
-        out = []
-        try:
-            for row in tb.fetch("chr" + c["chrom"], int(c["start"]), int(c["stop"])):
-                f = row.split("\t")
-                if f[6] != "PASS":
-                    continue
-                ref, alts = f[3], f[4].split(",")
-                for alt in alts:
-                    if alt in (".", "*") or max(len(ref), len(alt)) > 50:
+        out = None
+        for attempt in range(3):
+            try:
+                if attempt:
+                    tb = pysam.TabixFile(GIAB_URL)
+                cur = []
+                for row in tb.fetch("chr" + c["chrom"], int(c["start"]), int(c["stop"])):
+                    f = row.split("\t")
+                    if f[6] != "PASS":
                         continue
-                    out.append({"gene": g, "chrom": c["chrom"], "pos": int(f[1]),
-                                "ref": ref, "alt": alt, "origin": "HG002"})
-        except Exception:
-            pass
+                    ref, alts = f[3], f[4].split(",")
+                    for alt in alts:
+                        if alt in (".", "*") or max(len(ref), len(alt)) > 50:
+                            continue
+                        cur.append({"gene": g, "chrom": c["chrom"], "pos": int(f[1]),
+                                    "ref": ref, "alt": alt, "origin": "HG002"})
+                out = cur
+                break
+            except Exception:
+                import time as _t; _t.sleep(1)
+        if out is None:
+            continue
         json.dump(out, open(fp, "w"))
         done += 1
         if done % 50 == 0:
