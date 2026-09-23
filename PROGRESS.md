@@ -29,3 +29,6 @@
 
 ## 2026-09-23 19:13 IST
 - annotate: vep COMPLETE for all 21,440 case candidates (cache 27,428 total). gnomad 10,662/27,428 (case pass running, ~16.8k left). gnomad throttles hard on concurrency - settled on 1 worker + 1s pacing, ~400 variants/105s, ~2 skips/call.
+
+## 2026-09-23 19:44 IST
+- annotate: gnomad 16,622/27,428 (~10.8k left, steady ~450 variants/105s, 2-6 skips/call retried next pass). Est. 2 more wake cycles to drain, then finish stage (classify/rank/report + g3g4) and M4.
