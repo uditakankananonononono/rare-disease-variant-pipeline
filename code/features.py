@@ -21,9 +21,9 @@ def http_post(url, payload, tries=10):
         except urllib.error.HTTPError as e:
             if e.code == 400:
                 raise
-            time.sleep(2 ** i + 1)
+            time.sleep(min(2 ** i + 1, 30))
         except Exception:
-            time.sleep(2 ** i + 1)
+            time.sleep(min(2 ** i + 1, 30))
     raise RuntimeError("failed after retries: " + url)
 
 def vid(c, p, r, a):
