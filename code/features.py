@@ -19,6 +19,8 @@ def http_post(url, payload, tries=4, timeout=45):
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as e:
+            body = e.read()[:200]
+            print(f"HTTP {e.code}: {body}")
             if e.code == 400:
                 raise
             time.sleep(min(2 ** i + 1, 30))
@@ -103,13 +105,17 @@ def gnomad_batch(variants):
             out[v] = json.load(open(fp))
         else:
             todo.append(v)
-    for i in range(0, len(todo), 40):
-        chunk = todo[i:i + 40]
+    for i in range(0, len(todo), 20):
+        chunk = todo[i:i + 20]
         q = "query { " + " ".join(
             f'v{j}: variant(variantId: "{v}", dataset: gnomad_r4) '
             "{ variant_id genome { af ac an } exome { af ac an } }"
             for j, v in enumerate(chunk)) + " }"
-        res = http_post("https://gnomad.broadinstitute.org/api", {"query": q})
+        try:
+            res = http_post("https://gnomad.broadinstitute.org/api", {"query": q})
+        except Exception as e:
+            print(f"gnomad batch skipped ({e}); left uncached for retry")
+            continue
         data = res.get("data", {})
         for j, v in enumerate(chunk):
             d = data.get(f"v{j}")
@@ -136,8 +142,8 @@ def constraint_batch(genes):
             out[g] = json.load(open(fp))
         else:
             todo.append(g)
-    for i in range(0, len(todo), 20):
-        chunk = todo[i:i + 20]
+    for i in range(0, len(todo), 10):
+        chunk = todo[i:i + 10]
         q = "query { " + " ".join(
             f'g{j}: gene(gene_symbol: "{g}", reference_genome: GRCh38) '
             "{ gnomad_constraint { oe_lof oe_lof_upper mis_z lof_z } }"
