@@ -26,3 +26,6 @@
 
 ## 2026-09-23 18:42 IST
 - annotate stage: vep cache 24652 (~2.8k case candidates remaining), gnomad 6002 (case pass starts when vep drains). Ensembl transient throttle resolved by dropping to 4x50 threads; 0-skip steady ~800/105s.
+
+## 2026-09-23 19:13 IST
+- annotate: vep COMPLETE for all 21,440 case candidates (cache 27,428 total). gnomad 10,662/27,428 (case pass running, ~16.8k left). gnomad throttles hard on concurrency - settled on 1 worker + 1s pacing, ~400 variants/105s, ~2 skips/call.

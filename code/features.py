@@ -143,7 +143,8 @@ def gnomad_batch(variants):
                 feat = {"af": af, "ac": ac, "an": an, "found": True}
             json.dump(feat, open(os.path.join(CACHE, "gnomad", v + ".json"), "w"))
             out[v] = feat
-    with ThreadPoolExecutor(max_workers=3) as ex:
+        time.sleep(1.0)
+    with ThreadPoolExecutor(max_workers=1) as ex:
         list(ex.map(_do_chunk, chunks))
     return out
 
