@@ -14,7 +14,7 @@ All raw files live outside git (sandbox data dir); this manifest + SHA-256s are 
 | artifact | pin |
 |---|---|
 | phenopacket-store (monarch-initiative) | commit 4aed56ed8b1cdcf100336172a13cf144db7a5a60, cloned 2026-09-23; 10,714 phenopackets / 730 gene cohorts |
-| phenopacket_case_index.tsv (derived, in this repo) | 11,086 causal-variant records; 9,738 evaluable (hg38, <=50bp, ACMG P/LP, >=3 observed HPO terms, gene mapped) |
+| phenopacket_case_index.tsv (derived, in this repo; sha256 f0484820416f61f550727ed1962ab69944885244ab80509b92d3b2ec791df597) | 11,086 causal-variant records; 9,738 evaluable (hg38, <=50bp, ACMG P/LP, >=3 observed HPO terms, gene mapped) |
 
 ## Remote-slice artifacts (queried at runtime; per-query log kept)
 | source | endpoint / path |
