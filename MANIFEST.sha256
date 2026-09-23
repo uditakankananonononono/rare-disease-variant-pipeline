@@ -4,10 +4,6 @@ b4ae640edadf771f7928d7f98bf53f60c16bd55b4fbec63e29b10b6781ac2c9b  ./.gitignore
 b8886cf9ea920e35a0fd4db890eb5edb13dcc423cf1d22443131d6fe2aa45e24  ./PROGRESS.md
 d421c1605b112b077424b7942898456fad0970d3f2dd496283d6ed72d46d2508  ./README.md
 f08644102a94460b851a56724c071f14c947513d05fc27b4aeb222ae095e1a8f  ./RESUME.md
-48660428b480c07a63469fa35d10efb2cfb67f3d12322ab85c302a39566e3ed9  ./code/__pycache__/acmg.cpython-310.pyc
-d84cd33be334558bf9ee4dc5dd448914ee97b86da122dd3d9e9303ae7822ec1a  ./code/__pycache__/build_cases.cpython-310.pyc
-32fad58b5efc6fac19364d3913bac175fbbaf0ccbfc6c3405e63357f859489a6  ./code/__pycache__/features.cpython-310.pyc
-fb511cb1b74abb5d21a0da175847a1c7e12e2797ce19600ae11f906419bcc4f3  ./code/__pycache__/run_cases.cpython-310.pyc
 5d92a123f5fd0dc4d0745eb3043e411c74c120fd0c4af7cf904beef5b00eb077  ./code/acmg.py
 6de272cd2c6c4ba18b28e5f171c79001147752a091f9f286b99570d5832af80f  ./code/annotate_split.py
 4ac2c1593f0605dca74caa9c774bd2ff6fc04892951f952902222a92148d952d  ./code/benchmark.py
