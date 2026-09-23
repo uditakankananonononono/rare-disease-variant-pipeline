@@ -38,3 +38,11 @@
 
 ## 2026-09-23 20:46 IST
 - annotate: vep 27,428 + gnomad 27,428 COMPLETE for all case candidates. constraint pass running (2,792 genes cached, ~240/call). Next: annotate pass done -> finish stage (classify/rank/report + g3g4) -> M4.
+
+## 2026-09-23 20:56 IST - MILESTONE: case-level gates computed
+- annotate COMPLETE (21,440 candidates: vep 0 missing, gnomad 0 missing, constraint 2,040/2,040 genes).
+- run_cases DONE: 400 cases, 400 case reports with per-candidate evidence traces.
+- G3 (headline, as locked): FAIL - honest negative #2. top-5 recall full vs baseline: real 0.9731 vs 0.9892 (diff -1.61pp, CI [-4.3,+1.08]); sim 0.9796 vs 1.0 (-2.04pp, CI [-4.08,-0.51]); pooled -1.82pp (CI [-3.66,-0.26]). Pre-registered secondary top-1: full +13.4pp real (0.8656 vs 0.7312), +6.1pp sim, +9.7pp pooled.
+- G1b (positive control): PASS - sim full top-5 0.9796 >= 0.90.
+- G4: trace completeness 400/400 (6 strength-suffixed codes were parser artifacts, each code+datum present); calibration top-1: high 1/1, moderate-high 77/77, uncertain 272/322=0.845; false reassurance 0/400 (rule-of-three upper 0.75%); causal class dist P1/LP77/VUS322/LB0/B0.
+- Diagnosis: 12 lost vs 2 gained at top-5. Phenotype score boosts the true causal at rank 1 but injects pheno-matched VUS noise at ranks 2-5; causal variants in HPO-unmapped genes get pheno=0 and sink.

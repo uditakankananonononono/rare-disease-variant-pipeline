@@ -1,0 +1,37 @@
+{
+ "trace": {
+  "checked": 400,
+  "complete": 400,
+  "no_fired_codes": 21,
+  "completeness": 1.0
+ },
+ "calibration_top1": {
+  "high": {
+   "hits": 1,
+   "n": 1,
+   "acc": 1.0
+  },
+  "moderate-high": {
+   "hits": 77,
+   "n": 77,
+   "acc": 1.0
+  },
+  "uncertain": {
+   "hits": 272,
+   "n": 322,
+   "acc": 0.8447
+  }
+ },
+ "false_reassurance": {
+  "rate": 0.0,
+  "ci95_boot": [
+   0.0,
+   0.0
+  ],
+  "rule_of_three_upper": 0.0075
+ },
+ "top5_churn": {
+  "lost_by_full": 12,
+  "gained_by_full": 2
+ }
+}

@@ -1,0 +1,54 @@
+{
+ "n_cases": 400,
+ "real": {
+  "n": 200,
+  "full_top5": 0.9731,
+  "base_top5": 0.9892,
+  "full_top1": 0.8656,
+  "base_top1": 0.7312,
+  "top5_diff": -0.0161,
+  "ci95": [
+   -0.043,
+   0.0108
+  ],
+  "g3_pass": false
+ },
+ "sim": {
+  "n": 200,
+  "full_top5": 0.9796,
+  "base_top5": 1.0,
+  "full_top1": 0.9337,
+  "base_top1": 0.8724,
+  "top5_diff": -0.0204,
+  "ci95": [
+   -0.0408,
+   -0.0051
+  ],
+  "g3_pass": false
+ },
+ "all": {
+  "n": 400,
+  "full_top5": 0.9764,
+  "base_top5": 0.9948,
+  "full_top1": 0.9005,
+  "base_top1": 0.8037,
+  "top5_diff": -0.0182,
+  "ci95": [
+   -0.0366,
+   -0.0026
+  ],
+  "g3_pass": false
+ },
+ "g1b_pass": true,
+ "g4": {
+  "top1_plp_rate": 0.195,
+  "false_reassurance": 0.0,
+  "causal_class_dist": {
+   "P": 1,
+   "LP": 77,
+   "VUS": 322,
+   "LB": 0,
+   "B": 0
+  }
+ }
+}
