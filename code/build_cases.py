@@ -46,12 +46,19 @@ def gene_coords(genes):
         q = "query { " + " ".join(
             f'g{j}: gene(gene_symbol: "{g}", reference_genome: GRCh38) '
             "{ symbol chrom start stop }" for j, g in enumerate(chunk)) + " }"
-        res = http_post("https://gnomad.broadinstitute.org/api", {"query": q})
+        try:
+            res = http_post("https://gnomad.broadinstitute.org/api", {"query": q})
+        except Exception as e:
+            print(f"coords batch skipped ({e}); left uncached")
+            continue
         for j, g in enumerate(chunk):
             d = res.get("data", {}).get(f"g{j}")
             cache[g] = {"chrom": (d.get("chrom") or "").replace("chr", ""),
                         "start": d.get("start"), "stop": d.get("stop")} if d else None
         time.sleep(0.5)
+        if (i // 20) % 5 == 4:
+            json.dump(cache, open(COORD_CACHE, "w"))
+            print(f"coords {len(cache)} cached", flush=True)
     json.dump(cache, open(COORD_CACHE, "w"))
     return cache
 

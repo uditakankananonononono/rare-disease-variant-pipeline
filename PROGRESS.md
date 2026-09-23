@@ -6,3 +6,7 @@
   (full arm vs InterVar-automated-tier baseline arm) + report-quality metric suite
   (trace completeness, calibration, false-reassurance) quantified on 6,000 ClinVar
   variants + 400 cases. User grant on connected accounts/internet tools noted.
+
+## 2026-09-23 17:28 IST
+- coords stage COMPLETE: 2648/2648 panel genes resolved via gnomAD (1 unresolved symbol, skipped downstream). Incremental-save patch added after sandbox timeout killed end-only writes.
+- Next: hg002 per-gene GIAB tabix prefetch (~2.6k genes), then annotate (long pole), then finish + G3/G4.
