@@ -35,3 +35,6 @@
 
 ## 2026-09-23 20:15 IST
 - annotate: gnomad 22,622/27,428 (~4.8k left). Next wake should drain gnomad, then run finish stage (classify/rank/report + g3g4) and report M4 with G3/G4 numbers.
+
+## 2026-09-23 20:46 IST
+- annotate: vep 27,428 + gnomad 27,428 COMPLETE for all case candidates. constraint pass running (2,792 genes cached, ~240/call). Next: annotate pass done -> finish stage (classify/rank/report + g3g4) -> M4.
