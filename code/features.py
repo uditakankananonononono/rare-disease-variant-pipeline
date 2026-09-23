@@ -148,7 +148,11 @@ def constraint_batch(genes):
             f'g{j}: gene(gene_symbol: "{g}", reference_genome: GRCh38) '
             "{ gnomad_constraint { oe_lof oe_lof_upper mis_z lof_z } }"
             for j, g in enumerate(chunk)) + " }"
-        res = http_post("https://gnomad.broadinstitute.org/api", {"query": q})
+        try:
+            res = http_post("https://gnomad.broadinstitute.org/api", {"query": q})
+        except Exception as e:
+            print(f"constraint batch skipped ({e}); left uncached for retry")
+            continue
         data = res.get("data", {})
         for j, g in enumerate(chunk):
             d = (data.get(f"g{j}") or {}).get("gnomad_constraint") or {}
