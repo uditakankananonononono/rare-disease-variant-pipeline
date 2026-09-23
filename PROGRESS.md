@@ -49,3 +49,6 @@
 
 ## 2026-09-23 20:58 IST
 - Paper draft committed: paper/RDCB_paper.md (~2,400 words). Science-fair arc: problem -> multi-source byte-locked data -> locked-gate statistics -> results -> tool. Both negatives (G2 LOEUF, G3 top-5) preserved as findings; contribution = benchmarked interpretable case report + quantified top-1/top-5 phenotype tradeoff. Milestone 4 (results + paper draft) complete.
+
+## 2026-09-23 20:59 IST
+- MANIFEST.sha256 written over the full repo payload (434 files, excl. .git and itself). Payload 8.8MB. Seal request sent to parent.
